@@ -11,6 +11,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
+import java.util.Optional;
 
 @Service
 public class ArtistService {
@@ -22,17 +23,17 @@ public class ArtistService {
     private AlbumRepository albumRepository;
 
     public Page<Artist> findAllArtists(Integer page, Integer size, String sortProperty, String sortDirection) {
-        Sort sort = new Sort(new Sort.Order(Sort.Direction.fromString(sortDirection),sortProperty));
-        Pageable pageable = new PageRequest(page,size,sort);
+        Sort sort = Sort.by(Sort.Direction.fromString(sortDirection),sortProperty);
+        Pageable pageable = PageRequest.of(page,size,sort);
         return artistRepository.findAll(pageable);
     }
 
     public Artist findById(Long id) {
-        Artist artist = this.artistRepository.findOne(id);
-        if(artist == null){
+        Optional<Artist> artist = this.artistRepository.findById(id);
+        if(!artist.isPresent()){
             throw new EntityNotFoundException("Impossible de trouver l'artiste d'identifiant " + id);
         }
-        return artist;
+        return artist.get();
     }
 
     public Long countAllArtists() {
@@ -44,7 +45,7 @@ public class ArtistService {
     }
 
     public void deleteArtist(Long id) {
-        artistRepository.delete(id);
+        artistRepository.deleteById(id);
     }
 
     public Artist updateArtiste(Long id, Artist artist) {
@@ -52,8 +53,8 @@ public class ArtistService {
     }
 
     public Page<Artist> findByNameLikeIgnoreCase(String name, Integer page, Integer size, String sortProperty, String sortDirection) {
-        Sort sort = new Sort(new Sort.Order(Sort.Direction.fromString(sortDirection),sortProperty));
-        Pageable pageable = new PageRequest(page,size,sort);
+        Sort sort = Sort.by(Sort.Direction.fromString(sortDirection),sortProperty);
+        Pageable pageable = PageRequest.of(page,size,sort);
         return artistRepository.findByNameContainingIgnoreCase(name, pageable);
     }
 }
