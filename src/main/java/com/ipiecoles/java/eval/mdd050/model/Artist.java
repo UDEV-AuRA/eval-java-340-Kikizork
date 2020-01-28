@@ -3,6 +3,10 @@ package com.ipiecoles.java.eval.mdd050.model;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotEmpty;
+
+import org.hibernate.validator.constraints.UniqueElements;
+
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Objects;
@@ -12,11 +16,12 @@ import java.util.Set;
 public class Artist implements Serializable {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ArtistId")
     private Long id;
 
-    @Column(name = "Name")
+    @NotEmpty
+    @Column(name = "Name", unique = true)
     private String name;
 
     @JsonIgnoreProperties("artist")
