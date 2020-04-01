@@ -1,16 +1,19 @@
 package com.ipiecoles.java.eval.mdd050.model;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotEmpty;
+
 import java.util.Objects;
 
 @Entity
 public class Album {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "AlbumId")
     private Long id;
 
+    @NotEmpty
     @Column(name = "Title")
     private String title;
 
